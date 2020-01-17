@@ -2,10 +2,7 @@ package me.codalot.dragonblock;
 
 import lombok.Getter;
 import me.codalot.dragonblock.managers.Manager;
-import me.codalot.dragonblock.managers.types.FighterManager;
-import me.codalot.dragonblock.managers.types.ListenerManager;
-import me.codalot.dragonblock.managers.types.ModelManager;
-import me.codalot.dragonblock.managers.types.PlayerManager;
+import me.codalot.dragonblock.managers.types.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @Getter
@@ -17,6 +14,7 @@ public class DragonBlock extends JavaPlugin implements Manager {
     private ModelManager models;
     private FighterManager fighters;
     private PlayerManager players;
+    private CommandManager commands;
 
     @Override
     public void onEnable() {
@@ -26,6 +24,7 @@ public class DragonBlock extends JavaPlugin implements Manager {
         models = new ModelManager();
         players = new PlayerManager();
         fighters = new FighterManager();
+        commands = new CommandManager();
 
         load();
     }

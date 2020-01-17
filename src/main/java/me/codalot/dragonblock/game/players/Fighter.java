@@ -3,6 +3,7 @@ package me.codalot.dragonblock.game.players;
 import lombok.Getter;
 import me.codalot.dragonblock.game.*;
 import me.codalot.dragonblock.game.players.components.*;
+import me.codalot.dragonblock.game.players.process.ProcessHandler;
 import me.codalot.dragonblock.game.players.skin.SkinHandler;
 import me.codalot.dragonblock.managers.types.FighterManager;
 import me.codalot.dragonblock.setup.Model;
@@ -21,6 +22,8 @@ import java.util.*;
 public class Fighter implements ConfigurationSerializable {
 
     private UUID uuid;
+
+    private ProcessHandler processes;
 
     private MoveState state;
     private Sight sight;
@@ -49,6 +52,8 @@ public class Fighter implements ConfigurationSerializable {
     public Fighter(UUID uuid, Map<String, Object> data) {
         this.uuid = uuid;
 
+        processes = new ProcessHandler();
+
         state = MoveState.NORMAL;
         sight = new Sight(getPlayer().getLocation());
         skin = new SkinHandler(this);
@@ -63,7 +68,7 @@ public class Fighter implements ConfigurationSerializable {
 
         unlockedForms = new HashSet<>();
         unlockedForms.add(Form.BASE);
-        for (String form : (List<String>) data.get("unlocked-forms"))
+        for (String form : (List<String>) data.getOrDefault("unlocked-forms", new ArrayList<>()))
             unlockedForms.add(Form.valueOf(form));
         form = data.containsKey("form") ? Form.valueOf((String) data.get("form")) : Form.BASE;
 
@@ -189,6 +194,7 @@ public class Fighter implements ConfigurationSerializable {
     }
 
     public void unload() {
+        processes.endAll();
         FighterManager.getFighters().remove(uuid);
     }
 

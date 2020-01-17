@@ -4,8 +4,10 @@ import me.codalot.dragonblock.DragonBlock;
 import me.codalot.dragonblock.game.players.Fighter;
 import me.codalot.dragonblock.game.players.components.MoveState;
 import me.codalot.dragonblock.listeners.HandledListener;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
+import org.bukkit.event.entity.EntityToggleSwimEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 
@@ -36,6 +38,13 @@ public class FighterListener extends HandledListener {
     public void onEntityToggleGlide(EntityToggleGlideEvent event) {
         Fighter fighter = DragonBlock.getInstance().getFighters().getFighter(event.getEntity());
         if (fighter != null && fighter.getState() == MoveState.DASH)
+            event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onEntityToggleSwim(EntityToggleSwimEvent event) {
+        Fighter fighter = DragonBlock.getInstance().getFighters().getFighter(event.getEntity());
+        if (fighter != null && fighter.getState() == MoveState.CHARGE)
             event.setCancelled(true);
     }
 

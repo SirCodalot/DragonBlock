@@ -6,3 +6,6 @@ api-version: 1.15
 
 author: Shoham Tzubery
 website: github.com/SirCodalot
+
+commands:
+  debug:
