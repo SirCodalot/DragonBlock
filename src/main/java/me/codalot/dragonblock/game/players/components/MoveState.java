@@ -4,6 +4,7 @@ public enum MoveState {
 
     NORMAL,
     CHARGE,
+    TRANSFORM,
     FLY,
     DASH;
 

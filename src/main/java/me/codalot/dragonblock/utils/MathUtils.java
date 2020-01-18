@@ -10,4 +10,8 @@ public class MathUtils {
         return number;
     }
 
+    public static double lerp(double from, double to, double progress) {
+        return (1 - progress) * from + progress * to;
+    }
+
 }

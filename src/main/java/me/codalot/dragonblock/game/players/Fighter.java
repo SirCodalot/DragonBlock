@@ -1,15 +1,22 @@
 package me.codalot.dragonblock.game.players;
 
 import lombok.Getter;
+import me.codalot.dragonblock.DragonBlock;
 import me.codalot.dragonblock.game.*;
 import me.codalot.dragonblock.game.players.components.*;
 import me.codalot.dragonblock.game.players.process.ProcessHandler;
+import me.codalot.dragonblock.game.players.process.types.TransformationProcess;
 import me.codalot.dragonblock.game.players.skin.SkinHandler;
 import me.codalot.dragonblock.managers.types.FighterManager;
 import me.codalot.dragonblock.setup.Model;
 import me.codalot.dragonblock.utils.MathUtils;
+import me.codalot.dragonblock.utils.VectorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -54,14 +61,15 @@ public class Fighter implements ConfigurationSerializable {
 
         processes = new ProcessHandler();
 
-        state = MoveState.NORMAL;
+        resetState();
         sight = new Sight(getPlayer().getLocation());
         skin = new SkinHandler(this);
         models = new PlayerModels(this);
 
-        originalAppearance = new Appearance(null, Color.BLACK, null, Color.WHITE, skin.getOriginal());
+        originalAppearance = new Appearance(Model.HAIR_NORMAL, null, Model.AURA_SMALL, Color.WHITE, skin.getOriginal());
         currentAppearance = null;
-        getAppearance().apply(this);
+        Bukkit.getScheduler().runTaskLater(DragonBlock.getInstance(), () ->
+                getAppearance().apply(this), 5);
 
         abilities = new HashSet<>();
         ((List<String>) data.getOrDefault("abilities", new ArrayList<>())).forEach(name -> abilities.add(Ability.valueOf(name)));
@@ -131,6 +139,8 @@ public class Fighter implements ConfigurationSerializable {
 
         updateCharge();
         updateFlight();
+
+        processes.update();
     }
 
     private void updateLevels() {
@@ -159,8 +169,6 @@ public class Fighter implements ConfigurationSerializable {
         getPlayer().setVelocity(new Vector(0, 0, 0));
         if (!getPlayer().isOnGround())
             getPlayer().setGravity(false);
-
-        getPlayer().sendTitle("Charging", "", 0, 0, 10);
     }
 
     private void updateFlight() {
@@ -187,6 +195,8 @@ public class Fighter implements ConfigurationSerializable {
             Vector velocity = getPlayer().getEyeLocation().getDirection().clone().multiply(2);
             getPlayer().setVelocity(velocity);
 
+            if (player.getVelocity().getY() < -1.9 && !player.getLocation().getBlock().getRelative(BlockFace.DOWN).isPassable())
+                player.getWorld().createExplosion(player.getLocation().clone().add(0, -1, 0), (float) (5 * Math.abs(player.getVelocity().getY()) / 1.9), false);
         } else {
             getPlayer().setFlying(true);
             state = MoveState.FLY;
@@ -203,23 +213,29 @@ public class Fighter implements ConfigurationSerializable {
     }
 
     public void setCharging(boolean enable) {
+        if (state == MoveState.TRANSFORM)
+            return;
+
         if (enable) {
             if (state != MoveState.CHARGE)
-                models.set(Model.AURA_SMALL.get(), "aura");
+                models.set(currentAppearance == null ? originalAppearance.getAuraItem() : currentAppearance.getAuraItem(), "aura");
 
             state = MoveState.CHARGE;
 
             getPlayer().setWalkSpeed(0);
             getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 10000, 0, true, false));
         } else {
-            state = getPlayer().isFlying() ? MoveState.FLY : MoveState.NORMAL;
-
             getPlayer().setGravity(true);
             getPlayer().setWalkSpeed(.2f);
             getPlayer().removePotionEffect(PotionEffectType.JUMP);
+            state = getPlayer().isFlying() ? MoveState.FLY : MoveState.NORMAL;
 
             models.remove("aura");
         }
+    }
+
+    public void resetState() {
+        state = getPlayer().isOnGround() ? MoveState.NORMAL : MoveState.FLY;
     }
 
     public void toggleCharge() {
@@ -231,7 +247,7 @@ public class Fighter implements ConfigurationSerializable {
     }
 
     public void setFlying(boolean enable) {
-        if (state == MoveState.CHARGE)
+        if (state == MoveState.CHARGE || state == MoveState.TRANSFORM)
             return;
 
         if (enable) {
@@ -253,7 +269,7 @@ public class Fighter implements ConfigurationSerializable {
 
     public void setAppearance(Appearance appearance) {
         currentAppearance = appearance;
-        currentAppearance.apply(this);
+        currentAppearance.apply(this, originalAppearance);
     }
 
     public int getMaxHealth() {
@@ -268,8 +284,16 @@ public class Fighter implements ConfigurationSerializable {
         return Attribute.getMaxHealth(attributes.get(Attribute.MAX_STAMINA));
     }
 
+    public void setForm(Form form) {
+        this.form = form;
+        setAppearance(form.getAppearance() == null ? originalAppearance : form.getAppearance());
+    }
+
     public void transform(Form form) {
-        if (form == null)
+        if (isCharging())
+            return;
+
+        if (form == null || this.form == form)
             return;
 
         if (!unlockedForms.contains(form))
@@ -278,8 +302,16 @@ public class Fighter implements ConfigurationSerializable {
         if (!this.form.turnsInto(form))
             return;
 
-        this.form = form;
-        setAppearance(form.getAppearance());
+        if (processes.<TransformationProcess>getProcessCount() != 0)
+            return;
+
+        if (form == Form.BASE) {
+            setForm(form);
+            return;
+        }
+
+        state = MoveState.TRANSFORM;
+        processes.addAndStart(new TransformationProcess(this, form));
     }
 
 }
