@@ -1,7 +1,7 @@
 package me.codalot.dragonblock.game.models;
 
 import lombok.Getter;
-import me.codalot.dragonblock.game.players.components.Sight;
+import me.codalot.dragonblock.game.fighters.components.Sight;
 import me.codalot.dragonblock.utils.PacketUtils;
 import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.Location;

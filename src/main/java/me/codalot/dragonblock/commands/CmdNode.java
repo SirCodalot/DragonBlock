@@ -2,7 +2,8 @@ package me.codalot.dragonblock.commands;
 
 import lombok.Getter;
 import me.codalot.dragonblock.DragonBlock;
-import me.codalot.dragonblock.game.players.Fighter;
+import me.codalot.dragonblock.game.fighters.Fighter;
+import me.codalot.dragonblock.players.PlayerData;
 import me.codalot.dragonblock.utils.CollectionUtils;
 import org.bukkit.entity.Player;
 
@@ -60,6 +61,10 @@ public abstract class CmdNode {
 
     protected static Fighter getFighter(Player player) {
         return DragonBlock.getInstance().getFighters().getFighter(player);
+    }
+
+    protected static PlayerData getData(Player player) {
+        return DragonBlock.getInstance().getPlayers().getData(player);
     }
 
 }

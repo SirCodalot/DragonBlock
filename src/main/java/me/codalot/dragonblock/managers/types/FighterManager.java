@@ -2,7 +2,7 @@ package me.codalot.dragonblock.managers.types;
 
 import lombok.Getter;
 import me.codalot.dragonblock.DragonBlock;
-import me.codalot.dragonblock.game.players.Fighter;
+import me.codalot.dragonblock.game.fighters.Fighter;
 import me.codalot.dragonblock.managers.Manager;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
@@ -23,12 +23,12 @@ public class FighterManager implements Manager {
     private static BukkitTask updateTask;
 
     public FighterManager() {
-        fighters = new HashMap<>();
+        fighters = new HashMap<UUID, Fighter>();
     }
 
     @Override
     public void load() {
-        fighters = new HashMap<>();
+        fighters = new HashMap<UUID, Fighter>();
         updateTask = Bukkit.getScheduler().runTaskTimer(DragonBlock.getInstance(),
                 () -> fighters.values().forEach(Fighter::update), 10, 1);
     }

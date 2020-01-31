@@ -1,8 +1,8 @@
 package me.codalot.dragonblock.commands.types.debug;
 
 import me.codalot.dragonblock.commands.CmdNode;
-import me.codalot.dragonblock.game.players.Fighter;
-import me.codalot.dragonblock.game.players.components.Form;
+import me.codalot.dragonblock.game.fighters.Fighter;
+import me.codalot.dragonblock.game.fighters.components.Form;
 import org.bukkit.entity.Player;
 
 import java.util.List;

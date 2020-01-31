@@ -9,6 +9,8 @@ public class DebugCmd extends CmdNode {
         super();
 
         subNodes.put("transform", new TransformCmd());
+        subNodes.put("possess", new PossessCmd());
+        subNodes.put("eject", new EjectCmd());
     }
 
     @Override

@@ -1,16 +1,13 @@
 package me.codalot.dragonblock.listeners.types;
 
 import me.codalot.dragonblock.DragonBlock;
-import me.codalot.dragonblock.game.players.Fighter;
-import me.codalot.dragonblock.game.players.components.MoveState;
+import me.codalot.dragonblock.game.fighters.Fighter;
+import me.codalot.dragonblock.game.fighters.components.MoveState;
 import me.codalot.dragonblock.listeners.HandledListener;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.EntityToggleSwimEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 

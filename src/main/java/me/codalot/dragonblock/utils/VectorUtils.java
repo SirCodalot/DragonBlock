@@ -8,4 +8,12 @@ public class VectorUtils {
         return Math.sqrt(Math.pow(vector.getX(), 2) + Math.pow(vector.getY(), 2) + Math.pow(vector.getZ(), 2));
     }
 
+    public static Vector lerp(Vector from, Vector to, double progress) {
+        double x = MathUtils.lerp(from.getX(), to.getX(), progress);
+        double y = MathUtils.lerp(from.getY(), to.getY(), progress);
+        double z = MathUtils.lerp(from.getZ(), to.getZ(), progress);
+
+        return new Vector(x, y, z);
+    }
+
 }
