@@ -34,7 +34,7 @@ public class Appearance {
     }
 
     public void setAura(Model model, Color color) {
-        hair = model == null ? null : model.get(color);
+        aura = model == null ? null : model.get(color);
     }
 
     public Color getHairColor() {

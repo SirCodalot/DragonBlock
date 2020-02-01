@@ -42,7 +42,7 @@ public class TransformationProcess extends FighterProcess {
         to = form.getAppearance().getHairColor();
 
         state = TransformationState.PRE_TRANSFORMATION;
-        timer = 20 * form.getRequiredKi() / fighter.getData().getKi();
+        timer = 20 * form.getRequiredKi() / fighter.getKi();
         fullTimer = timer;
         // Timer = 20 is around 2 seconds because 20 * 2 is 40 ticks
 

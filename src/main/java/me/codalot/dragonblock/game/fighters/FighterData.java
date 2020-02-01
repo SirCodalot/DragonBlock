@@ -2,11 +2,9 @@ package me.codalot.dragonblock.game.fighters;
 
 import lombok.Getter;
 import me.codalot.dragonblock.game.Ability;
-import me.codalot.dragonblock.game.fighters.Attribute;
 import me.codalot.dragonblock.game.fighters.components.Form;
 import me.codalot.dragonblock.game.fighters.cosmetics.AppearancePreset;
 import me.codalot.dragonblock.game.fighters.cosmetics.FighterAppearance;
-import me.codalot.dragonblock.utils.MathUtils;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.*;
@@ -27,9 +25,29 @@ public class FighterData implements ConfigurationSerializable {
     private int level;
     private int experience;
 
-    private int health;
-    private int ki;
-    private int stamina;
+    public FighterData(
+            FighterAppearance appearance,
+            Set<Ability> abilities,
+            Set<Form> unlockedForms,
+            Form baseForm,
+            int attributePoints,
+            Map<Attribute, Integer> attributes,
+            int level,
+            int experience
+    ) {
+        this.appearance = appearance;
+
+        this.abilities = abilities;
+
+        this.unlockedForms = unlockedForms;
+        this.baseForm = baseForm;
+
+        this.attributePoints = attributePoints;
+        this.attributes = attributes;
+
+        this.level = level;
+        this.experience = experience;
+    }
 
     @SuppressWarnings("unchecked")
     public FighterData(Map<String, Object> map) {
@@ -51,10 +69,6 @@ public class FighterData implements ConfigurationSerializable {
 
         level = (int) map.getOrDefault("level", 1);
         experience = (int) map.getOrDefault("experience", 0);
-
-        health = (int) map.getOrDefault("health", getMaxHealth());
-        ki = (int) map.getOrDefault("ki", getMaxKi());
-        stamina = (int) map.getOrDefault("stamina", getMaxStamina());
     }
 
     @Override
@@ -75,43 +89,21 @@ public class FighterData implements ConfigurationSerializable {
         serialized.put("level", level);
         serialized.put("experience", experience);
 
-        serialized.put("health", health);
-        serialized.put("ki", ki);
-        serialized.put("stamina", stamina);
-
         serialized.put("attribute-points", attributePoints);
 
         return serialized;
-    }
-
-    public void updateLevels() {
-        health = MathUtils.clamp(health, 0, getMaxHealth());
-        ki = MathUtils.clamp(ki, 0, getMaxKi());
-        stamina = MathUtils.clamp(stamina, 0, getMaxStamina());
     }
 
     public int getMaxHealth() {
         return Attribute.getMaxHealth(attributes.get(Attribute.MAX_HEALTH));
     }
 
-    public double getHealthScale() {
-        return (double) health / getMaxHealth();
-    }
 
     public int getMaxKi() {
         return Attribute.getMaxHealth(attributes.get(Attribute.MAX_KI));
     }
-
-    public double getKiScale() {
-        return (double) ki / getMaxKi();
-    }
-
     public int getMaxStamina() {
         return Attribute.getMaxHealth(attributes.get(Attribute.MAX_STAMINA));
-    }
-
-    public double getStaminaScale() {
-        return (double) stamina / getMaxStamina();
     }
 
 }

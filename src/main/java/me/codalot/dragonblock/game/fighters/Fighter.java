@@ -11,6 +11,7 @@ import me.codalot.dragonblock.game.fighters.process.ProcessHandler;
 import me.codalot.dragonblock.game.fighters.process.types.TransformationProcess;
 import me.codalot.dragonblock.game.fighters.skin.SkinHandler;
 import me.codalot.dragonblock.managers.types.FighterManager;
+import me.codalot.dragonblock.utils.MathUtils;
 import me.codalot.dragonblock.utils.VectorUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -37,6 +38,10 @@ public class Fighter {
 
     private Form form;
 
+    private int health;
+    private int ki;
+    private int stamina;
+
     private boolean aura;
 
     public Fighter(UUID uuid, FighterData data) {
@@ -52,6 +57,10 @@ public class Fighter {
 
         setForm(data.getBaseForm());
 
+        health = data.getMaxHealth();
+        ki = data.getMaxKi();
+        stamina = data.getMaxStamina();
+
         aura = false;
 
         getPlayer().setAllowFlight(true);
@@ -65,7 +74,7 @@ public class Fighter {
     }
 
     public void update() {
-        data.updateLevels();
+        updateLevels();
         updateUI();
 
         sight.setLocation(getPlayer().getLocation());
@@ -76,13 +85,19 @@ public class Fighter {
         processes.update();
     }
 
+    public void updateLevels() {
+        health = MathUtils.clamp(health, 0, data.getMaxHealth());
+        ki = MathUtils.clamp(ki, 0, data.getMaxKi());
+        stamina = MathUtils.clamp(stamina, 0, data.getMaxStamina());
+    }
+
     private void updateUI() {
         Player player = getPlayer();
 
         player.setLevel(data.getLevel());
-        player.setExp((float) data.getHealthScale());
-        player.setHealth(data.getKiScale() * 20);
-        player.setFoodLevel((int) (data.getStaminaScale() * 20));
+        player.setExp((float) getHealthScale());
+        player.setHealth(getKiScale() * 20);
+        player.setFoodLevel((int) (getStaminaScale() * 20));
     }
 
     private void updateCharge() {
@@ -273,6 +288,18 @@ public class Fighter {
     public void resetAura() {
         deactivateAura();
         activateAura();
+    }
+
+    public double getHealthScale() {
+        return (double) health / data.getMaxHealth();
+    }
+
+    public double getKiScale() {
+        return (double) health / data.getMaxHealth();
+    }
+
+    public double getStaminaScale() {
+        return (double) health / data.getMaxHealth();
     }
 
     public Player getPlayer() {
