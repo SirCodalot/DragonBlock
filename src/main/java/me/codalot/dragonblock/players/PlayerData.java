@@ -6,6 +6,7 @@ import me.codalot.dragonblock.game.fighters.Fighter;
 import me.codalot.dragonblock.game.fighters.FighterData;
 import me.codalot.dragonblock.game.fighters.FighterPreset;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
@@ -55,18 +56,40 @@ public class PlayerData implements ConfigurationSerializable {
     }
 
     public void possessFighter(FighterData data) {
-        ejectFighter();
+        ejectFighter(false);
         fighter = new Fighter(uuid, data);
     }
 
-    public void ejectFighter() {
+    public void ejectFighter(boolean reskin) {
         if (fighter == null)
             return;
+
+        if (reskin)
+            fighter.getSkin().resetSkin();
 
         fighter.unload();
         fighter = null;
 
-        getPlayer().getInventory().setHelmet(null);
+        resetPlayer();
+    }
+
+    public void ejectFighter() {
+        ejectFighter(true);
+    }
+
+    private void resetPlayer() {
+        Player player = getPlayer();
+
+        player.getInventory().setHelmet(null);
+        player.setGameMode(GameMode.SURVIVAL);
+        player.setFlying(false);
+        player.setAllowFlight(false);
+        player.setGliding(false);
+        player.setFlySpeed(.1f);
+        player.setExp(0);
+        player.setLevel(0);
+        player.setHealth(20);
+        player.setFoodLevel(20);
     }
 
     public void save() {

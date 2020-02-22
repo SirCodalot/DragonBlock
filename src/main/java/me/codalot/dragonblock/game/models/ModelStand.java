@@ -9,6 +9,9 @@ import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
+import sun.util.locale.LocaleObjectCache;
 
 @Getter
 public class ModelStand {
@@ -42,12 +45,15 @@ public class ModelStand {
 
     private void createEntity(Location location) {
         nmsStand = new EntityArmorStand(((CraftWorld) location.getWorld()).getHandle(), location.getX(), location.getY(), location.getZ());
+        nmsStand.setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         stand = (ArmorStand) nmsStand.getBukkitEntity();
 
         nmsStand.setMarker(true);
         nmsStand.setSilent(true);
         nmsStand.setInvulnerable(true);
         nmsStand.setInvisible(true);
+
+        setHeadPose(location.getPitch());
     }
 
     private void createPackets() {
@@ -64,10 +70,20 @@ public class ModelStand {
         );
     }
 
+    public void setHeadPose(float pitch) {
+        stand.setHeadPose(new EulerAngle((pitch * 2 * Math.PI) / 360, 0, 0));
+    }
+
     public void setItem(ItemStack item) {
         this.item = item;
         equipPacket = new PacketPlayOutEntityEquipment(nmsStand.getId(), EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(item));
         sight.broadcast(dataPacket, equipPacket);
+    }
+
+    public void setVelocity(Vector velocity) {
+        stand.setMarker(false);
+        stand.setVelocity(velocity);
+        sight.broadcast(new PacketPlayOutEntityVelocity(nmsStand));
     }
 
     public void remove() {

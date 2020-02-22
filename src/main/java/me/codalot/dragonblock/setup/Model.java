@@ -33,9 +33,15 @@ public enum Model {
 
     HAIR_VEGETA_SUPER_SAIYAN(Material.LEATHER_BOOTS, 1051),
     HAIR_VEGETA_SUPER_SAIYAN_TWO(Material.LEATHER_BOOTS, 1052),
-    HAIR_VEGETA_SUPER_SAIYAN_FOUR(Material.LEATHER_BOOTS, 1053)
+    HAIR_VEGETA_SUPER_SAIYAN_FOUR(Material.LEATHER_BOOTS, 1053),
 
-    ;
+    // Attacks
+    KAMEHAMEHA_BODY(Material.LEATHER_BOOTS, 50),
+    KAMEHAMEHA_HEAD(Material.LEATHER_BOOTS, 51),
+
+
+    // Charge Animations
+    HANDS_FORWARD(Material.CROSSBOW, 1);
 
 
     private ItemStack base;

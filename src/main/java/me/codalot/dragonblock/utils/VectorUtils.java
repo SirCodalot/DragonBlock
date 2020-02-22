@@ -1,5 +1,6 @@
 package me.codalot.dragonblock.utils;
 
+import org.bukkit.Location;
 import org.bukkit.util.Vector;
 
 public class VectorUtils {
@@ -14,6 +15,10 @@ public class VectorUtils {
         double z = MathUtils.lerp(from.getZ(), to.getZ(), progress);
 
         return new Vector(x, y, z);
+    }
+
+    public static Vector lerp(Vector direction, Location location, Location target, double progress) {
+        return lerp(direction, target.toVector().subtract(location.toVector()).normalize(), progress);
     }
 
 }

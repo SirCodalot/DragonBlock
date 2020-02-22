@@ -51,6 +51,8 @@ public class TransformationProcess extends FighterProcess {
 
     @Override
     protected void onStart() {
+        fighter.setCharging(true);
+
         Player player = fighter.getPlayer();
 
         if (!player.isOnGround())
@@ -98,6 +100,7 @@ public class TransformationProcess extends FighterProcess {
 
         blocks.forEach(block -> block.setGravity(true));
 
+        fighter.setCharging(false);
         fighter.deactivateAura();
     }
 

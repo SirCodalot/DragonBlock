@@ -2,9 +2,10 @@ package me.codalot.dragonblock.game.fighters.components;
 
 public enum MoveState {
 
-    NORMAL,
+    FATIGUE,
     CHARGE,
-    TRANSFORM,
+
+    NORMAL,
     FLY,
     DASH;
 

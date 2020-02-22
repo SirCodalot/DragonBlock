@@ -21,4 +21,12 @@ public enum Attribute {
         return 100 + level * 3;
     }
 
+    public static double getBasicAttackStrength(int level) {
+        return 1 + level * level * 0.025;
+    }
+
+    public static double getKiBlastSupersStrength(int level) {
+        return 1 + level * level * 0.00625;
+    }
+
 }

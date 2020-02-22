@@ -100,10 +100,11 @@ public class FighterData implements ConfigurationSerializable {
 
 
     public int getMaxKi() {
-        return Attribute.getMaxHealth(attributes.get(Attribute.MAX_KI));
+        return Attribute.getMaxKi(attributes.get(Attribute.MAX_KI));
     }
+
     public int getMaxStamina() {
-        return Attribute.getMaxHealth(attributes.get(Attribute.MAX_STAMINA));
+        return Attribute.getMaxStamina(attributes.get(Attribute.MAX_STAMINA));
     }
 
 }

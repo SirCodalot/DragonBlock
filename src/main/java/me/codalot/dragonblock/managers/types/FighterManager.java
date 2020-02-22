@@ -44,7 +44,7 @@ public class FighterManager implements Manager {
     }
 
     public Fighter getFighter(Entity entity) {
-        return getFighter(entity.getUniqueId());
+        return entity == null ? null : getFighter(entity.getUniqueId());
     }
 
     public Fighter getFighter(PlayerEvent event) {
