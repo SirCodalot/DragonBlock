@@ -28,6 +28,8 @@ public class ModelStand {
     private PacketPlayOutEntityEquipment equipPacket;
     private PacketPlayOutEntityDestroy destroyPacket;
 
+    private double distanceTraveled;
+
     public ModelStand(ItemStack item, Location location, Sight sight) {
         this.sight = sight;
         this.item = item;
@@ -52,8 +54,6 @@ public class ModelStand {
         nmsStand.setSilent(true);
         nmsStand.setInvulnerable(true);
         nmsStand.setInvisible(true);
-
-        setHeadPose(location.getPitch());
     }
 
     private void createPackets() {
@@ -84,6 +84,7 @@ public class ModelStand {
         stand.setMarker(false);
         stand.setVelocity(velocity);
         sight.broadcast(new PacketPlayOutEntityVelocity(nmsStand));
+        distanceTraveled += velocity.length();
     }
 
     public void remove() {

@@ -3,12 +3,10 @@ package me.codalot.dragonblock.game.fighters;
 import lombok.Getter;
 import lombok.Setter;
 import me.codalot.dragonblock.DragonBlock;
-import me.codalot.dragonblock.game.fighters.combat.DamageData;
 import me.codalot.dragonblock.game.fighters.components.*;
 import me.codalot.dragonblock.game.fighters.cosmetics.Appearance;
 import me.codalot.dragonblock.game.fighters.process.FighterProcess;
 import me.codalot.dragonblock.game.fighters.process.ProcessHandler;
-import me.codalot.dragonblock.game.fighters.process.flags.Interruptable;
 import me.codalot.dragonblock.game.fighters.process.types.HeavyAttackProcess;
 import me.codalot.dragonblock.game.fighters.process.types.TransformationProcess;
 import me.codalot.dragonblock.game.fighters.skin.SkinHandler;
@@ -33,7 +31,6 @@ import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.UUID;
-import java.util.function.Predicate;
 
 @Getter
 public class Fighter {
@@ -458,12 +455,7 @@ public class Fighter {
     }
 
     public void interrupt() {
-        for (FighterProcess process : processes) {
-            if (process instanceof Interruptable)
-                stamina = 0;
-                // TODO put player in fatigue
-                return;
-        }
+        processes.interrupt();
     }
 
     private void playAnimation(int id) {

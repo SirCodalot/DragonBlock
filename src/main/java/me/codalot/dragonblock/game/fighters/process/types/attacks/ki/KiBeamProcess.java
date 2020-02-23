@@ -12,8 +12,10 @@ public class KiBeamProcess extends KiAttackProcess {
     @Override
     protected void onAttack() {
         if (timer % data.getSpeed() == 0) {
-            move();
-            addStand();
+            if (!interrupted && distance < data.getDistance()) {
+                move();
+                addStand();
+            }
 
             if (timer > data.getDuration())
                 removeStand();

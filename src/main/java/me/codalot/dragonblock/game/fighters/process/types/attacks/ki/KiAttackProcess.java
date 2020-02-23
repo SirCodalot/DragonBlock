@@ -7,7 +7,6 @@ import me.codalot.dragonblock.game.fighters.combat.DamageData;
 import me.codalot.dragonblock.game.fighters.combat.DamageType;
 import me.codalot.dragonblock.game.fighters.components.Sight;
 import me.codalot.dragonblock.game.fighters.process.FighterProcess;
-import me.codalot.dragonblock.game.fighters.process.flags.Interruptable;
 import me.codalot.dragonblock.game.models.ModelStand;
 import me.codalot.dragonblock.utils.VectorUtils;
 import org.bukkit.Location;
@@ -19,7 +18,7 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class KiAttackProcess extends FighterProcess implements Interruptable {
+public abstract class KiAttackProcess extends FighterProcess {
 
     protected KiAttackData data;
 
@@ -78,12 +77,12 @@ public abstract class KiAttackProcess extends FighterProcess implements Interrup
         if (timer % 5 == 0)
             damage();
 
-        if (distance >= data.getDistance())
-            end();
-
         timer++;
 
         stands.forEach(ModelStand::update);
+
+        if (stands.isEmpty())
+            end();
     }
 
     protected abstract void onAttack();
@@ -150,7 +149,9 @@ public abstract class KiAttackProcess extends FighterProcess implements Interrup
             stands.getLast().setItem(data.getModel().getBody());
 
         Location location = current.clone().add(0, -1.5, 0);
-        stands.add(new ModelStand(data.getModel().getHead(), location, new Sight(location)));
+        ModelStand stand = new ModelStand(data.getModel().getHead(), location, new Sight(location));
+        stand.setHeadPose(location.getPitch());
+        stands.add(stand);
     }
 
     protected void removeStand() {

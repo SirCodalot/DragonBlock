@@ -60,4 +60,8 @@ public class ProcessHandler extends HashSet<FighterProcess> {
 
         return count;
     }
+
+    public void interrupt() {
+        forEach(FighterProcess::interrupt);
+    }
 }

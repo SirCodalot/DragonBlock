@@ -16,8 +16,14 @@ public class KiProjectileProcess extends KiAttackProcess {
             addStand();
         }
 
-        if (!stands.isEmpty())
+        if (stands.isEmpty())
+            end();
+        else {
             stands.getLast().setVelocity(direction.clone().multiply(data.getSpeed()));
+
+            if (stands.getLast().getDistanceTraveled() >= data.getDistance())
+                stands.getLast().remove();
+        }
     }
 
 }

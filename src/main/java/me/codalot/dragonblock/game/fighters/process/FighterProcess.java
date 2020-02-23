@@ -10,12 +10,14 @@ public abstract class FighterProcess {
     private ProcessState state;
 
     protected Fighter fighter;
+    protected boolean interrupted;
 
     public FighterProcess(int updateRate, Fighter fighter) {
         this.updateRate = updateRate;
         state = ProcessState.PRE_PROGRESS;
 
         this.fighter = fighter;
+        interrupted = false;
     }
 
     public void start() {
@@ -37,6 +39,11 @@ public abstract class FighterProcess {
         }
     }
 
+    public void interrupt() {
+        if (isInterruptable() && state == ProcessState.IN_PROGRESS)
+            interrupted = true;
+    }
+
     public boolean isInProgress() {
         return state == ProcessState.IN_PROGRESS;
     }
@@ -45,9 +52,14 @@ public abstract class FighterProcess {
         return state == ProcessState.POST_PROGRESS;
     }
 
+    public boolean isInterruptable() {
+        return false;
+    }
+
     protected abstract void onStart();
 
     protected abstract void onProgress();
 
     protected abstract void onEnd();
+
 }

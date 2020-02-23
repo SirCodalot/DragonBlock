@@ -4,10 +4,9 @@ import me.codalot.dragonblock.game.fighters.Fighter;
 import me.codalot.dragonblock.game.fighters.combat.DamageData;
 import me.codalot.dragonblock.game.fighters.combat.DamageType;
 import me.codalot.dragonblock.game.fighters.process.FighterProcess;
-import me.codalot.dragonblock.game.fighters.process.flags.Interruptable;
 import org.bukkit.util.Vector;
 
-public class HeavyAttackProcess extends FighterProcess implements Interruptable {
+public class HeavyAttackProcess extends FighterProcess {
 
     private boolean charged;
 
@@ -23,6 +22,11 @@ public class HeavyAttackProcess extends FighterProcess implements Interruptable 
 
     @Override
     protected void onProgress() {
+        if (interrupted) {
+            end();
+            return;
+        }
+
         if (charged) {
             end();
 
